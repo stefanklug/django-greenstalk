@@ -1,14 +1,15 @@
+# -*- coding: utf-8 -*-
+
 import logging
 import os
 import sys
 import time
 import traceback
-from optparse import make_option
-
-from django.conf import settings
-from django.core.management.base import NoArgsCommand
 
 from beanstalkc import SocketError
+from django.conf import settings
+from django_six import CompatibilityBaseCommand
+
 from django_beanstalkd import BeanstalkError, connect_beanstalkd
 
 
@@ -16,37 +17,48 @@ logger = logging.getLogger('django_beanstalkd')
 logger.addHandler(logging.StreamHandler())
 
 
-class Command(NoArgsCommand):
-    help = "Start a Beanstalk worker serving all registered Beanstalk jobs"
-    __doc__ = help
-    option_list = NoArgsCommand.option_list + (
-        make_option('-w', '--workers', action='store', dest='worker_count',
-                    default='1', help='Number of workers to spawn.'),
-        make_option('-l', '--log-level', action='store', dest='log_level',
-                    default='info', help='Log level of worker process (one of '
-                    '"debug", "info", "warning", "error")'),
-    )
+class Command(CompatibilityBaseCommand):
+    __doc__ = help = 'Start a Beanstalk worker serving all registered Beanstalk jobs'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-w',
+            '--workers',
+            action='store',
+            dest='worker_count',
+            default='1',
+            help='Number of workers to spawn.',
+        )
+        parser.add_argument(
+            '-l',
+            '--log-level',
+            action='store',
+            dest='log_level',
+            default='info',
+            help='Log level of worker process (one of "debug", "info", "warning", "error")',
+        )
+
     children = []  # list of worker processes
     jobs = {}
 
-    def handle_noargs(self, **options):
-        # set log level
+    def handle(self, *args, **options):
+        # Set log level
         logger.setLevel(getattr(logging, options['log_level'].upper()))
 
-        # find beanstalk job modules
+        # Find beanstalk job modules
         bs_modules = []
         for app in settings.INSTALLED_APPS:
             try:
-                modname = "%s.beanstalk_jobs" % app
+                modname = '%s.beanstalk_jobs' % app
                 __import__(modname)
                 bs_modules.append(sys.modules[modname])
             except ImportError:
                 pass
         if not bs_modules:
-            logger.error("No beanstalk_jobs modules found!")
+            logger.error('No beanstalk_jobs modules found!')
             return
 
-        # find all jobs
+        # Find all jobs
         jobs = []
         for bs_module in bs_modules:
             try:
@@ -54,11 +66,11 @@ class Command(NoArgsCommand):
             except AttributeError:
                 pass
         if not jobs:
-            logger.error("No beanstalk jobs found!")
+            logger.error('No beanstalk jobs found!')
             return
-        logger.info("Available jobs:")
+        logger.info('Available jobs:')
         for job in jobs:
-            # determine right name to register function with
+            # Determine right name to register function with
             app = job.app
             jobname = job.__name__
             try:
@@ -69,9 +81,9 @@ class Command(NoArgsCommand):
             except AttributeError:
                 func = '%s.%s' % (app, jobname)
             self.jobs[func] = job
-            logger.info("* %s" % func)
+            logger.info('* %s' % func)
 
-        # spawn all workers and register all jobs
+        # Spawn all workers and register all jobs
         try:
             worker_count = int(options['worker_count'])
             assert(worker_count > 0)
@@ -79,8 +91,8 @@ class Command(NoArgsCommand):
             worker_count = 1
         self.spawn_workers(worker_count)
 
-        # start working
-        logger.info("Starting to work... (press ^C to exit)")
+        # Start working
+        logger.info('Starting to work... (press ^C to exit)')
         try:
             for child in self.children:
                 os.waitpid(child, 0)
@@ -93,12 +105,12 @@ class Command(NoArgsCommand):
         Accepts:
         - worker_count, positive int
         """
-        # no need for forking if there's only one worker
+        # No need for forking if there's only one worker
         if worker_count == 1:
             return self.work()
 
-        logger.info("Spawning %s worker(s)" % worker_count)
-        # spawn children and make them work (hello, 19th century!)
+        logger.info('Spawning %s worker(s)' % worker_count)
+        # Spawn children and make them work (hello, 19th century!)
         for i in range(worker_count):
             child = os.fork()
             if child:
@@ -109,7 +121,7 @@ class Command(NoArgsCommand):
                 break
 
     def work(self):
-        """children only: watch tubes for all jobs, start working"""
+        """Children only: watch tubes for all jobs, start working"""
         try:
 
             while True:
@@ -124,33 +136,27 @@ class Command(NoArgsCommand):
                     self.process_jobs(beanstalk)
 
                 except (BeanstalkError, SocketError) as e:
-                    logger.info("Beanstalk connection error: " + str(e))
+                    logger.info('Beanstalk connection error: ' + str(e))
                     time.sleep(2.0)
-                    logger.info("retrying Beanstalk connection...")
+                    logger.info('Retrying Beanstalk connection...')
 
         except KeyboardInterrupt:
             sys.exit(0)
 
     def process_jobs(self, beanstalk):
         while True:
-            logger.debug("Beanstalk connection established, waiting for jobs")
+            logger.debug('Beanstalk connection established, waiting for jobs')
             job = beanstalk.reserve()
             job_name = job.stats()['tube']
             if job_name in self.jobs:
-                logger.debug("Calling %s with arg: %s" % (job_name, job.body))
+                logger.debug('Calling %s with arg: %s' % (job_name, job.body))
                 try:
                     self.jobs[job_name](job.body)
                 except Exception, e:
                     tp, value, tb = sys.exc_info()
-                    logger.error('Error while calling "%s" with arg "%s": '
-                        '%s' % (
-                            job_name,
-                            job.body,
-                            e,
-                        )
-                    )
-                    logger.debug("%s:%s" % (tp.__name__, value))
-                    logger.debug("\n".join(traceback.format_tb(tb)))
+                    logger.error('Error while calling "%s" with arg "%s": %s' % (job_name, job.body, e))
+                    logger.debug('%s:%s' % (tp.__name__, value))
+                    logger.debug('\n'.join(traceback.format_tb(tb)))
                     job.bury()
                 else:
                     job.delete()
