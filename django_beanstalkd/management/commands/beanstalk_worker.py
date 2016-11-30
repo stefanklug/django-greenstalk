@@ -1,18 +1,20 @@
 import logging
-from optparse import make_option
 import os
 import sys
-import traceback
-
 import time
+import traceback
+from optparse import make_option
+
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
-from django_beanstalkd import connect_beanstalkd, BeanstalkError
+
 from beanstalkc import SocketError
+from django_beanstalkd import BeanstalkError, connect_beanstalkd
 
 
 logger = logging.getLogger('django_beanstalkd')
 logger.addHandler(logging.StreamHandler())
+
 
 class Command(NoArgsCommand):
     help = "Start a Beanstalk worker serving all registered Beanstalk jobs"
@@ -24,7 +26,7 @@ class Command(NoArgsCommand):
                     default='info', help='Log level of worker process (one of '
                     '"debug", "info", "warning", "error")'),
     )
-    children = [] # list of worker processes
+    children = []  # list of worker processes
     jobs = {}
 
     def handle_noargs(self, **options):

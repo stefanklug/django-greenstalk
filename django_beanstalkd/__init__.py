@@ -7,6 +7,7 @@ from beanstalkc import Connection, SocketError, DEFAULT_PRIORITY, DEFAULT_TTR
 
 from decorators import beanstalk_job
 
+
 def connect_beanstalkd():
     """Connect to beanstalkd server(s) from settings file"""
 
@@ -14,7 +15,7 @@ def connect_beanstalkd():
     port = 11300
     if server.find(':') > -1:
         server, port = server.split(':', 1)
-        
+
     try:
         port = int(port)
         return Connection(server, port)
@@ -33,7 +34,7 @@ class BeanstalkClient(object):
         """
         Calls the specified function (in beanstalk terms: put the specified arg
         in tube func)
-        
+
         priority: an integer number that specifies the priority. Jobs with a
                   smaller priority get executed first
         delay: how many seconds to wait before the job can be reserved
