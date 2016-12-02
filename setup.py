@@ -1,20 +1,24 @@
+# -*- coding: utf-8 -*-
+
 from setuptools import find_packages, setup
+
+
+version = '1.0.0'
 
 
 setup(
     name='django-beanstalkd',
-    version='0.2',
-    description='A convenience wrapper for beanstalkd clients and workers '
-                'in Django using the beanstalkc library for Python',
+    version=version,
+    description='A convenience wrapper for beanstalkd clients and workers in Django using the beanstalkc library for Python',
     long_description=open('README.md').read(),
-    author='Jonas VP',
-    author_email='jvp@jonasundderwolf.de',
+    author='Kimi Huang',
+    author_email='kimi.huang@brightcells.com',
     url='http://github.com/jonasvp/django-beanstalkd',
     license='MPL',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=['pyyaml', 'beanstalkc'],
+    install_requires=['pyyaml', 'beanstalkc', 'django_six'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

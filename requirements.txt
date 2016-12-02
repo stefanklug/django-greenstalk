@@ -1,4 +1,4 @@
 # pip requirements file
-pyyaml
+django_six
 beanstalkc
-
+pyyaml

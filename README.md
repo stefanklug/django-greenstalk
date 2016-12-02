@@ -14,14 +14,14 @@ and Fred's library! Beanstalkd is useful for background processes only.
 
 [beanstalkd]: http://kr.github.com/beanstalkd/
 [beanstalkc]: http://github.com/earl/beanstalkc/
-[django-gearman]: http://github.com/fwenzel/django-gearman
 [gearman]: http://gearman.org/
+[django-gearman]: http://github.com/fwenzel/django-gearman
 
 Installation
 ------------
 It's the same for both the client and worker instances of your django project:
 
-    pip install -e git+https://github.com/jonasvp/django-beanstalkd.git#egg=django-beanstalkd
+    pip install django-beanstalkd
 
 Add ``django_beanstalkd`` to the `INSTALLED_APPS` section of `settings.py`.
 
@@ -127,6 +127,7 @@ This software is licensed under the [Mozilla Tri-License][MPL]:
     Contributor(s):
       Jonas VP <jvp@jonasundderwolf.de>
       Frederic Wenzel <fwenzel@mozilla.com>
+      Kimi Huang <kimi.huang@brightcells.com>
 
     Alternatively, the contents of this file may be used under the terms of
     either the GNU General Public License Version 2 or later (the "GPL"), or
