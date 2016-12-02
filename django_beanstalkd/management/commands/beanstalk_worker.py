@@ -26,7 +26,8 @@ class Command(CompatibilityBaseCommand):
             '--workers',
             action='store',
             dest='worker_count',
-            default='1',
+            default=1,
+            type=int,
             help='Number of workers to spawn.',
         )
         parser.add_argument(
@@ -35,7 +36,8 @@ class Command(CompatibilityBaseCommand):
             action='store',
             dest='log_level',
             default='info',
-            help='Log level of worker process (one of "debug", "info", "warning", "error")',
+            choices=['debug', 'info', 'warning', 'error'],
+            help='Log level of worker process.',
         )
 
     children = []  # list of worker processes
@@ -84,12 +86,7 @@ class Command(CompatibilityBaseCommand):
             logger.info('* %s' % func)
 
         # Spawn all workers and register all jobs
-        try:
-            worker_count = int(options['worker_count'])
-            assert(worker_count > 0)
-        except (ValueError, AssertionError):
-            worker_count = 1
-        self.spawn_workers(worker_count)
+        self.spawn_workers(max(options['worker_count'], 1))
 
         # Start working
         logger.info('Starting to work... (press ^C to exit)')
