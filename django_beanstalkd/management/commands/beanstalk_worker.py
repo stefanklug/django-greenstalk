@@ -8,9 +8,8 @@ import traceback
 
 from beanstalkc import SocketError
 from django.conf import settings
-from django_six import CompatibilityBaseCommand
-
 from django_beanstalkd import BeanstalkError, connect_beanstalkd
+from django_six import CompatibilityBaseCommand
 
 
 logger = logging.getLogger('django_beanstalkd')

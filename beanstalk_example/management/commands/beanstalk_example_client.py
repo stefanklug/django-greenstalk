@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django_six import CompatibilityBaseCommand
-
 from django_beanstalkd import BeanstalkClient
+from django_six import CompatibilityBaseCommand
 
 
 class Command(CompatibilityBaseCommand):
