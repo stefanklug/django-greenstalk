@@ -127,6 +127,7 @@ This software is licensed under the [Mozilla Tri-License][MPL]:
     Contributor(s):
       Jonas VP <jvp@jonasundderwolf.de>
       Frederic Wenzel <fwenzel@mozilla.com>
+      Jeff Balogh <me@jeffbalogh.org>
       Kimi Huang <kimi.huang@brightcells.com>
 
     Alternatively, the contents of this file may be used under the terms of
