@@ -13,7 +13,7 @@ setup(
     long_description=open('README.md').read(),
     author='Kimi Huang',
     author_email='kimi.huang@brightcells.com',
-    url='http://github.com/jonasvp/django-beanstalkd',
+    url='https://github.com/beanstalkdclub/django-beanstalkd',
     license='MPL',
     packages=find_packages(),
     include_package_data=True,
