@@ -1,4 +1,4 @@
 # pip requirements file
 django_six
-beanstalkc
+beanstalkc3
 pyyaml

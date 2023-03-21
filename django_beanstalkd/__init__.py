@@ -1,11 +1,14 @@
 """
 Django Beanstalk Interface
 """
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from django.conf import settings
 
 from beanstalkc import Connection, SocketError, DEFAULT_PRIORITY, DEFAULT_TTR
 
-from decorators import beanstalk_job
+from .decorators import beanstalk_job
 
 
 def connect_beanstalkd():
@@ -19,7 +22,7 @@ def connect_beanstalkd():
     try:
         port = int(port)
         return Connection(server, port)
-    except (ValueError, SocketError), e:
+    except (ValueError, SocketError) as e:
         raise BeanstalkError(e)
 
 

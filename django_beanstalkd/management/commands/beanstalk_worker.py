@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from builtins import str
+from builtins import range
 import logging
 import os
 import sys
@@ -124,7 +126,7 @@ class Command(CompatibilityBaseCommand):
                 try:
                     # Reattempt Beanstalk connection if connection attempt fails or is dropped
                     beanstalk = connect_beanstalkd()
-                    for job in self.jobs.keys():
+                    for job in list(self.jobs.keys()):
                         beanstalk.watch(job)
                     beanstalk.ignore('default')
 
@@ -148,7 +150,7 @@ class Command(CompatibilityBaseCommand):
                 logger.debug('Calling %s with arg: %s' % (job_name, job.body))
                 try:
                     self.jobs[job_name](job.body)
-                except Exception, e:
+                except Exception as e:
                     tp, value, tb = sys.exc_info()
                     logger.error('Error while calling "%s" with arg "%s": %s' % (job_name, job.body, e))
                     logger.debug('%s:%s' % (tp.__name__, value))
