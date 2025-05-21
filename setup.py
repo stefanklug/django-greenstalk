@@ -18,7 +18,11 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=['pyyaml', 'beanstalkc3', 'django_six'],
+    install_requires=[
+        'pyyaml',
+        'beanstalkc@git+https://github.com/stefanklug/beanstalkc3.git@sklug/master#egg=beanstalkc',
+        'django_six'
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

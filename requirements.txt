@@ -1,4 +1,5 @@
 # pip requirements file
 django_six
-beanstalkc3
+git+https://github.com/stefanklug/beanstalkc3.git@sklug/master#egg=beanstalkc
+#beanstalkc3
 pyyaml
