@@ -1,12 +1,18 @@
 django-beanstalkd
 =================
 
-*django-beanstalkd* is a convenience wrapper for the [beanstalkd][beanstalkd]
-[Python Bindings][beanstalkc].
+*django-greenstalk* is a convenience wrapper for the [beanstalkd][beanstalkd]
+[Python Bindings][greenstalk].
 
-With django-beanstalkd, you can code jobs as well as clients in a Django project
+It is a fork from the original django-beanstalkd project which was left
+unmaintained. As the [beanstalkc][beanstalkc] python bindings are also no longer
+maintained I switched to the python only implementation
+[greenstalk][greenstalk]. Apart from the different underlying library, the
+project is mostly a dropin replacement for the old django-beanstalk project.
+
+With django-greenstalk, you can code jobs as well as clients in a Django project
 with minimal overhead in your application. Server connections etc. all take
-place in django-beanstalkd and don't unnecessarily clog your application code.
+place in django-greenstalk and don't unnecessarily clog your application code.
 
 This library is based in large part on Fred Wenzel's [django-gearman][django-gearman].
 If you're looking for synchronous execution of jobs, check out [Gearman][gearman]
@@ -16,6 +22,7 @@ and Fred's library! Beanstalkd is useful for background processes only.
 [beanstalkc]: http://github.com/earl/beanstalkc/
 [gearman]: http://gearman.org/
 [django-gearman]: http://github.com/fwenzel/django-gearman
+[greenstalk]: https://github.com/justinmayhew/greenstalk
 
 Installation
 ------------
@@ -129,6 +136,7 @@ This software is licensed under the [Mozilla Tri-License][MPL]:
       Frederic Wenzel <fwenzel@mozilla.com>
       Jeff Balogh <me@jeffbalogh.org>
       Kimi Huang <kimi.huang@brightcells.com>
+      Stefan Klug <klug.stefan@gmx.de>
 
     Alternatively, the contents of this file may be used under the terms of
     either the GNU General Public License Version 2 or later (the "GPL"), or

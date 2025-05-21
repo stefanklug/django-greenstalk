@@ -8,7 +8,6 @@ import sys
 import time
 import traceback
 
-from beanstalkc import SocketError
 from django.conf import settings
 from django_beanstalkd import BeanstalkError, connect_beanstalkd
 from django_six import CompatibilityBaseCommand
@@ -133,7 +132,7 @@ class Command(CompatibilityBaseCommand):
                     # Connected to Beanstalk queue, continually process jobs until an error occurs
                     self.process_jobs(beanstalk)
 
-                except (BeanstalkError, SocketError) as e:
+                except ConnectionError as e:
                     logger.info('Beanstalk connection error: ' + str(e))
                     time.sleep(2.0)
                     logger.info('Retrying Beanstalk connection...')
@@ -145,7 +144,7 @@ class Command(CompatibilityBaseCommand):
         while True:
             logger.debug('Beanstalk connection established, waiting for jobs')
             job = beanstalk.reserve()
-            job_name = job.stats()['tube']
+            job_name = beanstalk.stats_job(job)['tube']
             if job_name in self.jobs:
                 logger.debug('Calling %s with arg: %s' % (job_name, job.body))
                 try:
@@ -155,8 +154,8 @@ class Command(CompatibilityBaseCommand):
                     logger.error('Error while calling "%s" with arg "%s": %s' % (job_name, job.body, e))
                     logger.debug('%s:%s' % (tp.__name__, value))
                     logger.debug('\n'.join(traceback.format_tb(tb)))
-                    job.bury()
+                    beanstalk.bury(job)
                 else:
-                    job.delete()
+                    beanstalk.delete(job)
             else:
-                job.release()
+                beanstalk.release(job)

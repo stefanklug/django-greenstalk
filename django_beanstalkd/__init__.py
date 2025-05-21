@@ -5,11 +5,9 @@ from __future__ import absolute_import
 from builtins import str
 from builtins import object
 from django.conf import settings
-
-from beanstalkc import Connection, SocketError, DEFAULT_PRIORITY, DEFAULT_TTR
+import greenstalk
 
 from .decorators import beanstalk_job
-
 
 def connect_beanstalkd():
     """Connect to beanstalkd server(s) from settings file"""
@@ -19,11 +17,8 @@ def connect_beanstalkd():
     if server.find(':') > -1:
         server, port = server.split(':', 1)
 
-    try:
-        port = int(port)
-        return Connection(server, port)
-    except (ValueError, SocketError) as e:
-        raise BeanstalkError(e)
+    port = int(port)
+    return greenstalk.Client((server, port))
 
 
 class BeanstalkError(Exception):
@@ -33,7 +28,7 @@ class BeanstalkError(Exception):
 class BeanstalkClient(object):
     """beanstalk client, automatically connecting to server"""
 
-    def call(self, func, arg='', priority=DEFAULT_PRIORITY, delay=0, ttr=DEFAULT_TTR):
+    def call(self, func, arg='', priority=2**16, delay=0, ttr=60):
         """
         Calls the specified function (in beanstalk terms: put the specified arg
         in tube func)

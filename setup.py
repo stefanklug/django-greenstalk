@@ -9,16 +9,20 @@ version = '1.0.1'
 setup(
     name='django-beanstalkd',
     version=version,
-    description='A convenience wrapper for beanstalkd clients and workers in Django using the beanstalkc library for Python',
+    description='A convenience wrapper for beanstalkd clients and workers in Django using the greenstalk library for Python',
     long_description=open('README.md').read(),
-    author='Kimi Huang',
-    author_email='kimi.huang@brightcells.com',
-    url='https://github.com/beanstalkdclub/django-beanstalkd',
+    author='Stefan Klug',
+    author_email='klug.stefan@gmx.de',
+    url='https://github.com/beanstalkdclub/django-greenstalk',
     license='MPL',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=['pyyaml', 'beanstalkc3', 'django_six'],
+    install_requires=[
+        'pyyaml',
+        'greenstalk',
+        'django_six'
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
