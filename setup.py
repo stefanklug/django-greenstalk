@@ -7,7 +7,7 @@ version = '1.0.1'
 
 
 setup(
-    name='django-beanstalkd',
+    name='django-greenstalk',
     version=version,
     description='A convenience wrapper for beanstalkd clients and workers in Django using the greenstalk library for Python',
     long_description=open('README.md').read(),
@@ -20,8 +20,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'pyyaml',
-        'greenstalk',
-        'django_six'
+        'greenstalk'
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

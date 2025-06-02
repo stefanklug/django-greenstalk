@@ -10,14 +10,14 @@ import traceback
 
 from django.conf import settings
 from django_beanstalkd import BeanstalkError, connect_beanstalkd
-from django_six import CompatibilityBaseCommand
+from django.core.management.base import BaseCommand
 
 
 logger = logging.getLogger('django_beanstalkd')
 logger.addHandler(logging.StreamHandler())
 
 
-class Command(CompatibilityBaseCommand):
+class Command(BaseCommand):
     __doc__ = help = 'Start a Beanstalk worker serving all registered Beanstalk jobs'
 
     def add_arguments(self, parser):
